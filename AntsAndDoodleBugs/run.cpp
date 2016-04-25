@@ -10,22 +10,24 @@ Run::Run()
     QGraphicsScene::setFocus();
 }
 
-void Run::setup(QGraphicsScene * p_scene ,QGraphicsView* viewGrid)
+void Run::setup(QGraphicsView* viewGrid)
 {
-    p_Grid = new Grid(20,20,p_scene);
+    p_Grid = new Grid(20,20,this);
 
     turnNumber = 0; // Begin timekeeping
 
-    QGraphicsRectItem * gridFrameInner = new QGraphicsRectItem(0,0,200,200);
-    QGraphicsRectItem * gridFrameOuter = new QGraphicsRectItem(-5,-5,210,210);
 
+    QGraphicsRectItem * gridFrameOuter = new QGraphicsRectItem(-5,-5,210,210);
+    QGraphicsRectItem * gridFrameInner = new QGraphicsRectItem(0,0,200,200);
+    gridFrameInner->setBrush(QBrush(Qt::lightGray));
+    gridFrameOuter->setBrush(QBrush(Qt::gray));
 
     viewGrid->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     viewGrid->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     viewGrid->show();
-    p_Grid->p_scene->addItem(this);
-    p_Grid->p_scene->addItem(gridFrameInner);
+
     p_Grid->p_scene->addItem(gridFrameOuter);
+    p_Grid->p_scene->addItem(gridFrameInner);
 
     p_Grid->placeDoodlebugs(5);
     p_Grid->placeAnts(100);
@@ -45,20 +47,23 @@ void Run::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidg
     painter->drawRect(rect);
 }
 
-void Run::keyPressed(QKeyEvent *event)
+void Run::keyPressEvent(QKeyEvent *event)
 {
-    qDebug() << "key pressed";
+
     if (event->key() == Qt::Key_Space)
     {
+        qDebug() << "Space pressed.";
         play();
     }
     else if (event->key() == Qt::Key_R)
     {
+        qDebug() << "R pressed.";
         reset();
     }
     else if (event->key() == Qt::Key_Escape)
     {
-        return;
+        qDebug() << "Escape pressed.";
+        QApplication::quit();
     }
 }
 

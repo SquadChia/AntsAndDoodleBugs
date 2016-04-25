@@ -7,15 +7,16 @@
 #include <QGraphicsRectItem>
 
 
+
 class Run : public QGraphicsRectItem, public QGraphicsScene
 {
 public:
     Run();
-    void setup(QGraphicsScene * scene, QGraphicsView * view);
+    void setup(QGraphicsView * view);
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-    void keyPressed(QKeyEvent * event);
+    void keyPressEvent(QKeyEvent * event);
     void play();
     void reset();
 

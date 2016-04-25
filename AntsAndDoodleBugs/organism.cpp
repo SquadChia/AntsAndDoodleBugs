@@ -68,30 +68,13 @@ void Organism::resetMoved()
 }
 
 
+
 int Organism::getCount()
 {
     return count;
 }
 
-void Organism::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget, bool type, int x, int y)
-{
-    QRectF rect = boundingRect(x, y);
-    if (type == true)
-    {
-        QPen pen(Qt::red, 3);
-        painter->setPen(pen);
-        painter->drawRect(rect);
-    }
-    else
-    {
-        QPen pen(Qt::blue, 3);
-        painter->setPen(pen);
-        painter->drawRect(rect);
-    }
 
-}
 
-QRectF Organism::boundingRect(int x, int y) const
-{
-    return QRectF(x, y, 10, 10);
-}
+
+

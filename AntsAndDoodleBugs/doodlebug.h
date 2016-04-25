@@ -16,6 +16,7 @@ public:
 
     static unsigned getCount();
 
+
 private:
     void starve(); // get closer to starving
     int timeToStarve; // How many turns left to starve; starve @0
