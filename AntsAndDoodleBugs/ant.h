@@ -1,7 +1,9 @@
 #ifndef ANT_H
 #define ANT_H
 #include "organism.h"
-#include <QGraphicsRectItem>
+#include <QPaintEvent>
+
+
 
 class Ant : public Organism
 {
@@ -12,6 +14,7 @@ public:
     void breed();
 
     static unsigned getCount();
+
 
 private:
     static unsigned count; // tracks how many ants exist

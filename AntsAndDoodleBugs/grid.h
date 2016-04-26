@@ -23,8 +23,8 @@ public:
     void moveAnts();
     void breedAnts();
     void starveDoodlebugs(); // Culls the doodlebugs that have starved
-    unsigned numAnts() const; // returns number of ants present
-    unsigned numDoodlebugs() const; // returns number of doodlebugs present
+    int numAnts() const; // returns number of ants present
+    int numDoodlebugs() const; // returns number of doodlebugs present
     unsigned getCellCount() const; // returns number of occupied cells
 
 

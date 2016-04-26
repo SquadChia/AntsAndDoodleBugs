@@ -1,4 +1,5 @@
 #include "run.h"
+#include"ant.h"
 #include <QGraphicsRectItem>
 #include <QGraphicsView>
 #include <QDebug>
@@ -10,26 +11,43 @@ Run::Run()
     QGraphicsScene::setFocus();
 }
 
-void Run::setup(QGraphicsScene * p_scene ,QGraphicsView* viewGrid)
+void Run::setup(QGraphicsView* viewGrid)
 {
-    p_Grid = new Grid(20,20,p_scene);
+    p_Grid = new Grid(20,20,this);
 
     turnNumber = 0; // Begin timekeeping
 
-    QGraphicsRectItem * gridFrameInner = new QGraphicsRectItem(0,0,200,200);
-    QGraphicsRectItem * gridFrameOuter = new QGraphicsRectItem(-5,-5,210,210);
 
+    QGraphicsRectItem * gridFrameOuter = new QGraphicsRectItem(-5,-5,210,210);
+    QGraphicsRectItem * gridFrameInner = new QGraphicsRectItem(0,0,200,200);
+
+
+    gridFrameInner->setBrush(QBrush(Qt::lightGray));
+    gridFrameOuter->setBrush(QBrush(Qt::gray));
+
+    QGraphicsRectItem * countFrameOuter = new QGraphicsRectItem(-5, 205, 210, 50);
+    countFrameOuter->setBrush(QBrush(Qt::darkCyan));
 
     viewGrid->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     viewGrid->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     viewGrid->show();
-    p_Grid->p_scene->addItem(this);
-    p_Grid->p_scene->addItem(gridFrameInner);
-    p_Grid->p_scene->addItem(gridFrameOuter);
 
+    p_Grid->p_scene->addItem(gridFrameOuter);
+    p_Grid->p_scene->addItem(gridFrameInner);
+    p_Grid->p_scene->addItem(countFrameOuter);
     p_Grid->placeDoodlebugs(5);
     p_Grid->placeAnts(100);
 
+    r_numAnts = new QGraphicsTextItem;
+    setAnts(getNumAnts());
+    r_numAnts->setPos(0, 205);
+
+    r_numDoodleBugs = new QGraphicsTextItem;
+    setDbugs(getNumDoodleBugs());
+    r_numDoodleBugs->setPos(0, 230);
+
+    p_Grid->p_scene->addItem(r_numDoodleBugs);
+    p_Grid->p_scene->addItem(r_numAnts);
 }
 
 QRectF Run::boundingRect() const
@@ -45,20 +63,23 @@ void Run::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidg
     painter->drawRect(rect);
 }
 
-void Run::keyPressed(QKeyEvent *event)
+void Run::keyPressEvent(QKeyEvent *event)
 {
-    qDebug() << "key pressed";
+
     if (event->key() == Qt::Key_Space)
     {
+        qDebug() << "Space pressed.";
         play();
     }
     else if (event->key() == Qt::Key_R)
     {
+        qDebug() << "R pressed.";
         reset();
     }
     else if (event->key() == Qt::Key_Escape)
     {
-        return;
+        qDebug() << "Escape pressed.";
+        QApplication::quit();
     }
 }
 
@@ -70,6 +91,8 @@ void Run::play()
     p_Grid->breedAnts();
     p_Grid->starveDoodlebugs();
     p_Grid->resetAllMoveFlags();
+    setAnts(getNumAnts());
+    setDbugs(getNumDoodleBugs());
     ++turnNumber;
 }
 
@@ -82,3 +105,22 @@ void Run::reset()
 }
 
 
+QString Run::getNumAnts()
+{
+    return QString::number(p_Grid->numAnts());
+}
+
+QString Run::getNumDoodleBugs()
+{
+    return QString::number(p_Grid->numDoodlebugs());
+}
+
+void Run::setAnts(QString ants)
+{
+    r_numAnts->setPlainText("Number of Ants: " + ants);
+}
+
+void Run::setDbugs(QString Dbugs)
+{
+    r_numDoodleBugs->setPlainText("Number of DoodleBugs: " + Dbugs);
+}

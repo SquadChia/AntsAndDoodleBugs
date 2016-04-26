@@ -2,10 +2,11 @@
 #define ORGANISM_H
 
 #include <iostream>
-#include <QGraphicsRectItem>
 #include <QtWidgets>
-#include <QBrush>
-#include <QPainter>
+#include <QWidget>
+#include <QGraphicsRectItem>
+#include <QGraphicsItem>
+
 
 
 
@@ -26,16 +27,13 @@ public:
     void setMoved();
     void resetMoved();
 
-    //Overloadeding the virtual functions for coloring
-    virtual QRectF boundingRect(int x, int y) const;
-    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget, bool type, int x, int y);
 
     static int getCount();
 
     friend std::ostream& operator<<(std::ostream& out, const Organism& printMe) { return printMe.display(out); }
 
-
-
+    int x_pos;
+    int y_pos;
 
 protected:
     int timeToBreed; // How many turns left to breed; breed @0
