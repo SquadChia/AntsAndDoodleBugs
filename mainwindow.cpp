@@ -47,3 +47,5 @@ void MainWindow::on_actionAdd_Jewels_triggered()
     window->show();
 }
 
+
+

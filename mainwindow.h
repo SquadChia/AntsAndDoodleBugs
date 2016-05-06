@@ -22,6 +22,8 @@ private slots:
 
 
 
+    void on_actionAdd_Jewels_destroyed();
+
 private:
     Ui::MainWindow *ui;
 };

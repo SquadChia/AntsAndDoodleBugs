@@ -19,7 +19,7 @@ Grid::Grid(unsigned p_rows, unsigned p_columns,  QGraphicsScene * scene)
         m_orgPtrMatrix[i].resize(p_columns);
     for (unsigned i = 0; i < m_orgPtrMatrix.size(); ++i)
         for (unsigned j = 0; j < m_orgPtrMatrix[0].size(); ++j)
-            m_orgPtrMatrix[i][j] = 0;
+            m_orgPtrMatrix[i][j] = nullptr;
     cellCount = 0;
 }
 
@@ -27,7 +27,7 @@ Grid::~Grid()
 {
     for (unsigned i = 0; i < m_orgPtrMatrix.size(); ++i)
         for (unsigned j = 0; j < m_orgPtrMatrix[0].size(); ++j)
-            if (m_orgPtrMatrix[i][j] != 0)
+            if (m_orgPtrMatrix[i][j] != nullptr)
                 delete m_orgPtrMatrix[i][j];
 }
 
@@ -48,7 +48,7 @@ void Grid::displayMatrix() const
         cout << char(186); // two vertical lines on the left of each row
         for (unsigned j = 0; j < m_orgPtrMatrix[0].size(); ++j)
         {
-            if (m_orgPtrMatrix[i][j] == 0)
+            if (m_orgPtrMatrix[i][j] == nullptr)
                 cout << ' ';
             else
                 cout << *m_orgPtrMatrix[i][j];
@@ -72,17 +72,15 @@ bool Grid::placeDoodlebugs(unsigned numDoodlebugs)
         return false; // Not enough free cells
     else
     {
-        srand(static_cast<unsigned>(time(0)));
+        srand(static_cast<unsigned>(time(nullptr)));
         for (unsigned doodlebugsPlaced = 0; doodlebugsPlaced < numDoodlebugs;)
         {
             int x = rand() % m_orgPtrMatrix.size();
             int y = rand() % m_orgPtrMatrix[0].size();
-            if (m_orgPtrMatrix[x][y] == 0)
+            if (m_orgPtrMatrix[x][y] == nullptr)
             {
                 m_orgPtrMatrix[x][y] = new Doodlebug;
                 m_orgPtrMatrix[x][y]->setRect(x*10+100, y*10+100, 10,10);
-                m_orgPtrMatrix[x][y]->x_pos = x;
-                m_orgPtrMatrix[x][y]->y_pos = y;
                 m_orgPtrMatrix[x][y]->setBrush(QBrush(Qt::red));
                 p_scene->addItem(m_orgPtrMatrix[x][y]);
                 ++doodlebugsPlaced;
@@ -99,17 +97,15 @@ bool Grid::placeAnts(unsigned numAnts)
         return false; // Not enough free cells
     else
     {
-        srand(static_cast<unsigned>(time(0)));
+        srand(static_cast<unsigned>(time(nullptr)));
         for (unsigned antsPlaced = 0; antsPlaced < numAnts;)
         {
             int x = rand() % m_orgPtrMatrix.size();
             int y = rand() % m_orgPtrMatrix[0].size();
-            if (m_orgPtrMatrix[x][y] == 0)
+            if (m_orgPtrMatrix[x][y] == nullptr)
             {
                 m_orgPtrMatrix[x][y] = new Ant;
                 m_orgPtrMatrix[x][y]->setRect(x*10+100, y*10+100, 10,10);
-                m_orgPtrMatrix[x][y]->x_pos = x;
-                m_orgPtrMatrix[x][y]->y_pos = y;
                 m_orgPtrMatrix[x][y]->setBrush(QBrush(Qt::blue));
                 p_scene->addItem(m_orgPtrMatrix[x][y]);
                 ++antsPlaced;
@@ -125,7 +121,7 @@ void Grid::resetAllMoveFlags()
     for (unsigned i = 0; i < m_orgPtrMatrix.size(); ++i)
         for (unsigned j = 0; j < m_orgPtrMatrix[0].size(); ++j)
         {
-            if (m_orgPtrMatrix[i][j] != 0)
+            if (m_orgPtrMatrix[i][j] != nullptr)
                 m_orgPtrMatrix[i][j]->resetMoved();
         }
 }
@@ -137,30 +133,30 @@ void Grid::moveDoodlebugs()
     {
         for (unsigned j = 0; j < m_orgPtrMatrix[0].size(); ++j)
         {
-            if (m_orgPtrMatrix[i][j] != 0 && dynamic_cast<Doodlebug *>(m_orgPtrMatrix[i][j]) != 0 && !m_orgPtrMatrix[i][j]->hasAlreadyMoved())
+            if (m_orgPtrMatrix[i][j] != nullptr && dynamic_cast<Doodlebug *>(m_orgPtrMatrix[i][j]) != nullptr && !m_orgPtrMatrix[i][j]->hasAlreadyMoved())
             {
                 //check for ants: [i-1][j], [i+1][j], [i][j-1], [i][j+1]
                 struct { int row; int col; } targetLocation[4]; // array to hold target locations
                 int targetLocSize = 0;
-                if ((i > 0) && (m_orgPtrMatrix[i - 1][j] != 0) && (dynamic_cast<Ant *>(m_orgPtrMatrix[i - 1][j]) != 0))
+                if ((i > 0) && (m_orgPtrMatrix[i - 1][j] != nullptr) && (dynamic_cast<Ant *>(m_orgPtrMatrix[i - 1][j]) != nullptr))
                 {
                     targetLocation[targetLocSize].row = i - 1;
                     targetLocation[targetLocSize].col = j;
                     ++targetLocSize;
                 }
-                if ((i < m_orgPtrMatrix.size() - 1) && (m_orgPtrMatrix[i + 1][j] != 0) && (dynamic_cast<Ant *>(m_orgPtrMatrix[i + 1][j]) != 0))
+                if ((i < m_orgPtrMatrix.size() - 1) && (m_orgPtrMatrix[i + 1][j] != nullptr) && (dynamic_cast<Ant *>(m_orgPtrMatrix[i + 1][j]) != nullptr))
                 {
                     targetLocation[targetLocSize].row = i + 1;
                     targetLocation[targetLocSize].col = j;
                     ++targetLocSize;
                 }
-                if ((j > 0) && (m_orgPtrMatrix[i][j - 1] != 0) && (dynamic_cast<Ant *>(m_orgPtrMatrix[i][j - 1]) != 0))
+                if ((j > 0) && (m_orgPtrMatrix[i][j - 1] != nullptr) && (dynamic_cast<Ant *>(m_orgPtrMatrix[i][j - 1]) != nullptr))
                 {
                     targetLocation[targetLocSize].row = i;
                     targetLocation[targetLocSize].col = j - 1;
                     ++targetLocSize;
                 }
-                if ((j < m_orgPtrMatrix[0].size() - 1) && (m_orgPtrMatrix[i][j + 1] != 0) && (dynamic_cast<Ant *>(m_orgPtrMatrix[i][j + 1]) != 0))
+                if ((j < m_orgPtrMatrix[0].size() - 1) && (m_orgPtrMatrix[i][j + 1] != nullptr) && (dynamic_cast<Ant *>(m_orgPtrMatrix[i][j + 1]) != nullptr))
                 {
                     targetLocation[targetLocSize].row = i;
                     targetLocation[targetLocSize].col = j + 1;
@@ -169,42 +165,42 @@ void Grid::moveDoodlebugs()
 
                 m_orgPtrMatrix[i][j]->move();
 
-                srand(static_cast<unsigned>(time(0)));
+                srand(static_cast<unsigned>(time(nullptr)));
                 if (targetLocSize != 0) // Ant(s) found, eat one
                 {
                     m_orgPtrMatrix[i][j]->resetStarve(); // hunger averted
                     int targetAntIndex = rand() % targetLocSize; // randomly choose one of the 1-4 found ants
                     delete m_orgPtrMatrix[targetLocation[targetAntIndex].row][targetLocation[targetAntIndex].col]; // consume ant
                     m_orgPtrMatrix[targetLocation[targetAntIndex].row][targetLocation[targetAntIndex].col] = m_orgPtrMatrix[i][j]; // move into its old location
-                    m_orgPtrMatrix[targetLocation[targetAntIndex].row][targetLocation[targetAntIndex].col]->setPos(targetLocation[targetAntIndex].row*10+100, targetLocation[targetAntIndex].col*10+100);
-                    m_orgPtrMatrix[targetLocation[targetAntIndex].row][targetLocation[targetAntIndex].col]->x_pos = targetLocation[targetAntIndex].row;
-                    m_orgPtrMatrix[targetLocation[targetAntIndex].row][targetLocation[targetAntIndex].col]->y_pos = targetLocation[targetAntIndex].col;
+                    m_orgPtrMatrix[targetLocation[targetAntIndex].row][targetLocation[targetAntIndex].col]->setRect(targetLocation[targetAntIndex].row*10+100, targetLocation[targetAntIndex].col*10+100, 10, 10);
+                    m_orgPtrMatrix[targetLocation[targetAntIndex].row][targetLocation[targetAntIndex].col]->setBrush(QBrush(Qt::green));
+                    //p_scene->addItem(m_orgPtrMatrix[targetLocation[targetAntIndex].row][targetLocation[targetAntIndex].col]);
                     m_orgPtrMatrix[i][j]->setPos(0,0);
-                    m_orgPtrMatrix[i][j] = 0;
+                    m_orgPtrMatrix[i][j] = nullptr;
                     --cellCount; // one less cell occupied
                 }
                 else // regular move
                 {
                     targetLocSize = 0; // reset this to re-use the temporary target location array
-                    if ((i > 0) && (m_orgPtrMatrix[i - 1][j] == 0))
+                    if ((i > 0) && (m_orgPtrMatrix[i - 1][j] == nullptr))
                     {
                         targetLocation[targetLocSize].row = i - 1;
                         targetLocation[targetLocSize].col = j;
                         ++targetLocSize;
                     }
-                    if ((i < m_orgPtrMatrix.size() - 1) && (m_orgPtrMatrix[i + 1][j] == 0))
+                    if ((i < m_orgPtrMatrix.size() - 1) && (m_orgPtrMatrix[i + 1][j] == nullptr))
                     {
                         targetLocation[targetLocSize].row = i + 1;
                         targetLocation[targetLocSize].col = j;
                         ++targetLocSize;
                     }
-                    if ((j > 0) && (m_orgPtrMatrix[i][j - 1] == 0))
+                    if ((j > 0) && (m_orgPtrMatrix[i][j - 1] == nullptr))
                     {
                         targetLocation[targetLocSize].row = i;
                         targetLocation[targetLocSize].col = j - 1;
                         ++targetLocSize;
                     }
-                    if ((j < m_orgPtrMatrix[0].size() - 1) && (m_orgPtrMatrix[i][j + 1] == 0))
+                    if ((j < m_orgPtrMatrix[0].size() - 1) && (m_orgPtrMatrix[i][j + 1] == nullptr))
                     {
                         targetLocation[targetLocSize].row = i;
                         targetLocation[targetLocSize].col = j + 1;
@@ -214,11 +210,11 @@ void Grid::moveDoodlebugs()
                     {
                         int targetMoveIndex = rand() % targetLocSize; // randomly choose one of the 1-4 empty locations
                         m_orgPtrMatrix[targetLocation[targetMoveIndex].row][targetLocation[targetMoveIndex].col] = m_orgPtrMatrix[i][j];
-                        m_orgPtrMatrix[targetLocation[targetMoveIndex].row][targetLocation[targetMoveIndex].col]->setPos(targetLocation[targetMoveIndex].row*10, targetLocation[targetMoveIndex].col*10);
-                        m_orgPtrMatrix[targetLocation[targetMoveIndex].row][targetLocation[targetMoveIndex].col]->x_pos = targetLocation[targetMoveIndex].row;
-                        m_orgPtrMatrix[targetLocation[targetMoveIndex].row][targetLocation[targetMoveIndex].col]->y_pos = targetLocation[targetMoveIndex].col;
+                        m_orgPtrMatrix[targetLocation[targetMoveIndex].row][targetLocation[targetMoveIndex].col]->setRect(targetLocation[targetMoveIndex].row*10+100, targetLocation[targetMoveIndex].col*10+100, 10, 10);
+                        m_orgPtrMatrix[targetLocation[targetMoveIndex].row][targetLocation[targetMoveIndex].col]->setBrush(QBrush(Qt::red));
+                        //p_scene->addItem(m_orgPtrMatrix[targetLocation[targetMoveIndex].row][targetLocation[targetMoveIndex].col]);
                         m_orgPtrMatrix[i][j]->setPos(0,0);
-                        m_orgPtrMatrix[i][j] = 0;
+                        m_orgPtrMatrix[i][j] = nullptr;
                     }
                 }
             }
@@ -233,30 +229,30 @@ void Grid::breedDoodlebugs()
     {
         for (unsigned j = 0; j < m_orgPtrMatrix[0].size(); ++j)
         {
-            if (m_orgPtrMatrix[i][j] != 0 && dynamic_cast<Doodlebug *>(m_orgPtrMatrix[i][j]) != 0 && m_orgPtrMatrix[i][j]->isBreedingTime())
+            if (m_orgPtrMatrix[i][j] != nullptr && dynamic_cast<Doodlebug *>(m_orgPtrMatrix[i][j]) != nullptr && m_orgPtrMatrix[i][j]->isBreedingTime())
             {
                 //check for empty cells: [i-1][j], [i+1][j], [i][j-1], [i][j+1]
                 struct { int row; int col; } targetLocation[4]; // array to hold target locations
                 int targetLocSize = 0;
-                if ((i > 0) && (m_orgPtrMatrix[i - 1][j] == 0))
+                if ((i > 0) && (m_orgPtrMatrix[i - 1][j] == nullptr))
                 {
                     targetLocation[targetLocSize].row = i - 1;
                     targetLocation[targetLocSize].col = j;
                     ++targetLocSize;
                 }
-                if ((i < m_orgPtrMatrix.size() - 1) && (m_orgPtrMatrix[i + 1][j] == 0))
+                if ((i < m_orgPtrMatrix.size() - 1) && (m_orgPtrMatrix[i + 1][j] == nullptr))
                 {
                     targetLocation[targetLocSize].row = i + 1;
                     targetLocation[targetLocSize].col = j;
                     ++targetLocSize;
                 }
-                if ((j > 0) && (m_orgPtrMatrix[i][j - 1] == 0))
+                if ((j > 0) && (m_orgPtrMatrix[i][j - 1] == nullptr))
                 {
                     targetLocation[targetLocSize].row = i;
                     targetLocation[targetLocSize].col = j - 1;
                     ++targetLocSize;
                 }
-                if ((j < m_orgPtrMatrix[0].size() - 1) && (m_orgPtrMatrix[i][j + 1] == 0))
+                if ((j < m_orgPtrMatrix[0].size() - 1) && (m_orgPtrMatrix[i][j + 1] == nullptr))
                 {
                     targetLocation[targetLocSize].row = i;
                     targetLocation[targetLocSize].col = j + 1;
@@ -265,13 +261,11 @@ void Grid::breedDoodlebugs()
 
                 if (targetLocSize != 0) // Empty cell(s) found
                 {
-                    srand(static_cast<unsigned>(time(0)));
+                    srand(static_cast<unsigned>(time(nullptr)));
                     int targetBreedIndex = rand() % targetLocSize; // randomly choose one of the 1-4 empty locations
                     m_orgPtrMatrix[targetLocation[targetBreedIndex].row][targetLocation[targetBreedIndex].col] = new Doodlebug;
                     m_orgPtrMatrix[targetLocation[targetBreedIndex].row][targetLocation[targetBreedIndex].col]->setRect(targetLocation[targetBreedIndex].row*10+100, targetLocation[targetBreedIndex].col*10+100, 10,10);
-                    m_orgPtrMatrix[targetLocation[targetBreedIndex].row][targetLocation[targetBreedIndex].col]->x_pos = targetLocation[targetBreedIndex].row;
-                    m_orgPtrMatrix[targetLocation[targetBreedIndex].row][targetLocation[targetBreedIndex].col]->y_pos = targetLocation[targetBreedIndex].col;
-                    m_orgPtrMatrix[targetLocation[targetBreedIndex].row][targetLocation[targetBreedIndex].col]->setBrush(QBrush(Qt::red));
+                    m_orgPtrMatrix[targetLocation[targetBreedIndex].row][targetLocation[targetBreedIndex].col]->setBrush(QBrush(Qt::yellow));
                     p_scene->addItem(m_orgPtrMatrix[targetLocation[targetBreedIndex].row][targetLocation[targetBreedIndex].col]);
                     m_orgPtrMatrix[i][j]->breed();
                     ++cellCount; // one more cell occupied
@@ -288,32 +282,32 @@ void Grid::moveAnts()
     {
         for (unsigned j = 0; j < m_orgPtrMatrix[0].size(); ++j)
         {
-            if (m_orgPtrMatrix[i][j] != 0 && dynamic_cast<Ant *>(m_orgPtrMatrix[i][j]) != 0 && !m_orgPtrMatrix[i][j]->hasAlreadyMoved())
+            if (m_orgPtrMatrix[i][j] != nullptr && dynamic_cast<Ant *>(m_orgPtrMatrix[i][j]) != nullptr && !m_orgPtrMatrix[i][j]->hasAlreadyMoved())
             {
                 m_orgPtrMatrix[i][j]->move();
 
                 //check for openings: [i-1][j], [i+1][j], [i][j-1], [i][j+1]
                 struct { int row; int col; } targetLocation[4]; // array to hold target locations
                 int targetLocSize = 0;
-                if ((i > 0) && (m_orgPtrMatrix[i - 1][j] == 0))
+                if ((i > 0) && (m_orgPtrMatrix[i - 1][j] == nullptr))
                 {
                     targetLocation[targetLocSize].row = i - 1;
                     targetLocation[targetLocSize].col = j;
                     ++targetLocSize;
                 }
-                if ((i < m_orgPtrMatrix.size() - 1) && (m_orgPtrMatrix[i + 1][j] == 0))
+                if ((i < m_orgPtrMatrix.size() - 1) && (m_orgPtrMatrix[i + 1][j] == nullptr))
                 {
                     targetLocation[targetLocSize].row = i + 1;
                     targetLocation[targetLocSize].col = j;
                     ++targetLocSize;
                 }
-                if ((j > 0) && (m_orgPtrMatrix[i][j - 1] == 0))
+                if ((j > 0) && (m_orgPtrMatrix[i][j - 1] == nullptr))
                 {
                     targetLocation[targetLocSize].row = i;
                     targetLocation[targetLocSize].col = j - 1;
                     ++targetLocSize;
                 }
-                if ((j < m_orgPtrMatrix[0].size() - 1) && (m_orgPtrMatrix[i][j + 1] == 0))
+                if ((j < m_orgPtrMatrix[0].size() - 1) && (m_orgPtrMatrix[i][j + 1] == nullptr))
                 {
                     targetLocation[targetLocSize].row = i;
                     targetLocation[targetLocSize].col = j + 1;
@@ -321,14 +315,14 @@ void Grid::moveAnts()
                 }
                 if (targetLocSize != 0) // Empty cell(s) found
                 {
-                    srand(static_cast<unsigned>(time(0)));
+                    srand(static_cast<unsigned>(time(nullptr)));
                     int targetMoveIndex = rand() % targetLocSize; // randomly choose one of the 1-4 empty locations
                     m_orgPtrMatrix[targetLocation[targetMoveIndex].row][targetLocation[targetMoveIndex].col] = m_orgPtrMatrix[i][j];
-                    m_orgPtrMatrix[targetLocation[targetMoveIndex].row][targetLocation[targetMoveIndex].col]->setPos(targetLocation[targetMoveIndex].row*10+100, targetLocation[targetMoveIndex].col*10+100);
-                    m_orgPtrMatrix[targetLocation[targetMoveIndex].row][targetLocation[targetMoveIndex].col]->x_pos = targetLocation[targetMoveIndex].row;
-                    m_orgPtrMatrix[targetLocation[targetMoveIndex].row][targetLocation[targetMoveIndex].col]->y_pos = targetLocation[targetMoveIndex].col;
+                    m_orgPtrMatrix[targetLocation[targetMoveIndex].row][targetLocation[targetMoveIndex].col]->setRect(targetLocation[targetMoveIndex].row*10+100, targetLocation[targetMoveIndex].col*10+100, 10, 10);
+                    m_orgPtrMatrix[targetLocation[targetMoveIndex].row][targetLocation[targetMoveIndex].col]->setBrush(QBrush(Qt::blue));
+                    //p_scene->addItem(m_orgPtrMatrix[targetLocation[targetMoveIndex].row][targetLocation[targetMoveIndex].col]);
                     m_orgPtrMatrix[i][j]->setPos(0,0);
-                    m_orgPtrMatrix[i][j] = 0;
+                    m_orgPtrMatrix[i][j] = nullptr;
                 }
             }
         }
@@ -342,30 +336,30 @@ void Grid::breedAnts()
     {
         for (unsigned j = 0; j < m_orgPtrMatrix[0].size(); ++j)
         {
-            if (m_orgPtrMatrix[i][j] != 0 && dynamic_cast<Ant *>(m_orgPtrMatrix[i][j]) != 0 && m_orgPtrMatrix[i][j]->isBreedingTime())
+            if (m_orgPtrMatrix[i][j] != nullptr && dynamic_cast<Ant *>(m_orgPtrMatrix[i][j]) != nullptr && m_orgPtrMatrix[i][j]->isBreedingTime())
             {
                 //check for empty cells: [i-1][j], [i+1][j], [i][j-1], [i][j+1]
                 struct { int row; int col; } targetLocation[4]; // array to hold target locations
                 int targetLocSize = 0;
-                if ((i > 0) && (m_orgPtrMatrix[i - 1][j] == 0))
+                if ((i > 0) && (m_orgPtrMatrix[i - 1][j] == nullptr))
                 {
                     targetLocation[targetLocSize].row = i - 1;
                     targetLocation[targetLocSize].col = j;
                     ++targetLocSize;
                 }
-                if ((i < m_orgPtrMatrix.size() - 1) && (m_orgPtrMatrix[i + 1][j] == 0))
+                if ((i < m_orgPtrMatrix.size() - 1) && (m_orgPtrMatrix[i + 1][j] == nullptr))
                 {
                     targetLocation[targetLocSize].row = i + 1;
                     targetLocation[targetLocSize].col = j;
                     ++targetLocSize;
                 }
-                if ((j > 0) && (m_orgPtrMatrix[i][j - 1] == 0))
+                if ((j > 0) && (m_orgPtrMatrix[i][j - 1] == nullptr))
                 {
                     targetLocation[targetLocSize].row = i;
                     targetLocation[targetLocSize].col = j - 1;
                     ++targetLocSize;
                 }
-                if ((j < m_orgPtrMatrix[0].size() - 1) && (m_orgPtrMatrix[i][j + 1] == 0))
+                if ((j < m_orgPtrMatrix[0].size() - 1) && (m_orgPtrMatrix[i][j + 1] == nullptr))
                 {
                     targetLocation[targetLocSize].row = i;
                     targetLocation[targetLocSize].col = j + 1;
@@ -374,13 +368,11 @@ void Grid::breedAnts()
 
                 if (targetLocSize != 0) // Empty cell(s) found
                 {
-                    srand(static_cast<unsigned>(time(0)));
+                    srand(static_cast<unsigned>(time(nullptr)));
                     int targetBreedIndex = rand() % targetLocSize; // randomly choose one of the 1-4 empty locations
                     m_orgPtrMatrix[targetLocation[targetBreedIndex].row][targetLocation[targetBreedIndex].col] = new Ant;
                     m_orgPtrMatrix[targetLocation[targetBreedIndex].row][targetLocation[targetBreedIndex].col]->setRect(targetLocation[targetBreedIndex].row*10+100, targetLocation[targetBreedIndex].col*10+100, 10,10);
-                    m_orgPtrMatrix[targetLocation[targetBreedIndex].row][targetLocation[targetBreedIndex].col]->x_pos = targetLocation[targetBreedIndex].row;
-                    m_orgPtrMatrix[targetLocation[targetBreedIndex].row][targetLocation[targetBreedIndex].col]->y_pos = targetLocation[targetBreedIndex].col;
-                    m_orgPtrMatrix[targetLocation[targetBreedIndex].row][targetLocation[targetBreedIndex].col]->setBrush(QBrush(Qt::blue));
+                    m_orgPtrMatrix[targetLocation[targetBreedIndex].row][targetLocation[targetBreedIndex].col]->setBrush(QBrush(Qt::cyan));
                     p_scene->addItem(m_orgPtrMatrix[targetLocation[targetBreedIndex].row][targetLocation[targetBreedIndex].col]);
                     m_orgPtrMatrix[i][j]->breed();
                     ++cellCount; // one more cell occupied
@@ -397,10 +389,10 @@ void Grid::starveDoodlebugs()
     {
         for (unsigned j = 0; j < m_orgPtrMatrix[0].size(); ++j)
         {
-            if (m_orgPtrMatrix[i][j] != 0 && dynamic_cast<Doodlebug *>(m_orgPtrMatrix[i][j]) != 0 && m_orgPtrMatrix[i][j]->isStarving())
+            if (m_orgPtrMatrix[i][j] != nullptr && dynamic_cast<Doodlebug *>(m_orgPtrMatrix[i][j]) != nullptr && m_orgPtrMatrix[i][j]->isStarving())
             {
                 delete m_orgPtrMatrix[i][j];
-                m_orgPtrMatrix[i][j] = 0;
+                m_orgPtrMatrix[i][j] = nullptr;
                 --cellCount; // one less cell occupied
             }
         }

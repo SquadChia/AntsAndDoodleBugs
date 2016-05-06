@@ -3,6 +3,7 @@
 #include <QGraphicsRectItem>
 #include <QGraphicsView>
 #include <QDebug>
+#include <QTimer>
 
 Run::Run()
 {
@@ -50,37 +51,33 @@ void Run::setup(QGraphicsView* viewGrid)
     p_Grid->p_scene->addItem(r_numAnts);
 }
 
-QRectF Run::boundingRect() const
-{
-    return QRectF(0,0,0,0);
-}
 
-void Run::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-{
-    QRectF rect = boundingRect();
-    QPen pen(Qt::red, 3);
-    painter->setPen(pen);
-    painter->drawRect(rect);
-}
 
 void Run::keyPressEvent(QKeyEvent *event)
 {
+    bool automatic = false;
+    if (!automatic)
+    {
+        if (getNumDoodleBugs() != 0)
+        {
+            if (event->key() == Qt::Key_Space)
+            {
+                qDebug() << "Space pressed.";
+                play();
+             }
+        }
+        else if (event->key() == Qt::Key_R)
+        {
+            qDebug() << "R pressed.";
+            reset();
+        }
+        else if (event->key() == Qt::Key_Escape)
+        {
+            qDebug() << "Escape pressed.";
+            QApplication::quit();
+        }
+    }
 
-    if (event->key() == Qt::Key_Space)
-    {
-        qDebug() << "Space pressed.";
-        play();
-    }
-    else if (event->key() == Qt::Key_R)
-    {
-        qDebug() << "R pressed.";
-        reset();
-    }
-    else if (event->key() == Qt::Key_Escape)
-    {
-        qDebug() << "Escape pressed.";
-        QApplication::quit();
-    }
 }
 
 void Run::play()
@@ -124,3 +121,4 @@ void Run::setDbugs(QString Dbugs)
 {
     r_numDoodleBugs->setPlainText("Number of DoodleBugs: " + Dbugs);
 }
+

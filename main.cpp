@@ -19,9 +19,9 @@ int main(int argc, char *argv[])
 
     Run * game01 = new Run();
 
-
     game01->setup(viewGrid);
     game01->addWidget(&w);
+
     qDebug() << "check1";
 
     viewGrid->setScene(game01);

@@ -5,6 +5,8 @@
 #include <QGraphicsScene>
 #include <QKeyEvent>
 #include <QGraphicsRectItem>
+#include <QObject>
+#include<QtCore>
 
 
 
@@ -13,20 +15,20 @@ class Run : public QGraphicsRectItem, public QGraphicsScene
 public:
     Run();
     void setup(QGraphicsView * view);
-    QRectF boundingRect() const;
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     void keyPressEvent(QKeyEvent * event);
-    void play();
     void reset();
     QString getNumAnts();
     QString getNumDoodleBugs();
     void setAnts(QString ants);
     void setDbugs(QString Dbugs);
+    void play();
 private:
     Grid* p_Grid;
     int turnNumber;
     QGraphicsTextItem* r_numAnts;
     QGraphicsTextItem* r_numDoodleBugs;
+
+
 
 };
 
